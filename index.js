@@ -1,0 +1,21 @@
+const bodyParser = require("body-parser");
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const authRoutes = require("./routes/authRoutes");
+const taskRoutes = require("./routes/taskRoutes");
+const app = express();
+mongoose.set("strictQuery", true);
+require("dotenv").config();
+app.get("/", (req, res) => {
+  res.send("Welcome");
+});
+app.use(cors());
+app.use(express.json());
+app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use("/api/user", authRoutes);
+app.use("/api/task", taskRoutes);
+mongoose.connect(process.env.DBURL, () => console.log("Mongoose Connected"));
+app.listen(8000, () => console.log("Server connected"));
